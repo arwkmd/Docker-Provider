@@ -94,12 +94,16 @@ private:
                 if (entry)
                 {
                     cJSON* tags = cJSON_GetObjectItem(entry, "RepoTags");
-
+                    syslog(LOG_WARNING, "Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     if (tags && cJSON_GetArraySize(tags))
                     {
                         string value = string(cJSON_GetArrayItem(tags, 0)->valuestring);
                         result[string(cJSON_GetObjectItem(entry, "Id")->valuestring)] = SetImageRepositoryImageTag(value);
                     }
+					else
+					{
+						syslog(LOG_INFO, "The container has no RepoTags: %s", string(cJSON_GetObjectItem(entry, "Id")->valuestring));
+					}
                 }
                 else
                 {
@@ -285,6 +289,7 @@ private:
             string imageId = string(cJSON_GetObjectItem(response[0], "Image")->valuestring);
             instance.ImageId_value(imageId.c_str());
 
+            syslog(LOG_INFO, "namemap.count for container %s : %d", id.c_str(), nameMap.count(imageId));
             if (nameMap.count(imageId))
             {
                 instance.Repository_value(nameMap[imageId][0].c_str());
@@ -327,11 +332,11 @@ public:
 
         /// Map the image name, repository, imagetag to ID
         map<string, vector<string> > nameMap = GenerateImageNameMap();
-
         for (set<string>::iterator i = containerIds.begin(); i != containerIds.end(); ++i)
         {
             // Set all data
             string id = string(*i);
+            syslog(LOG_INFO, "in QueryAll Creating containerinventory instance for containter: %s", id.c_str());
             Container_ContainerInventory_Class instance = InspectContainer(id, nameMap);
             instance.Computer_value(hostname.c_str());
 
