@@ -100,10 +100,10 @@ private:
                         string value = string(cJSON_GetArrayItem(tags, 0)->valuestring);
                         result[string(cJSON_GetObjectItem(entry, "Id")->valuestring)] = SetImageRepositoryImageTag(value);
                     }
-					else
-					{
-						syslog(LOG_INFO, "The container has no RepoTags: %s", string(cJSON_GetObjectItem(entry, "Id")->valuestring));
-					}
+                    else
+                    {
+                       syslog(LOG_INFO, "The container has no RepoTags: %s", cJSON_GetObjectItem(entry, "Id")->valuestring);
+                    }
                 }
                 else
                 {
