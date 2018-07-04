@@ -8,7 +8,7 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <vector>
-
+#include<iostream>
 #include "../cjson/cJSON.h"
 #include "../dockerapi/DockerRemoteApi.h"
 #include "../dockerapi/DockerRestHelper.h"
@@ -63,7 +63,7 @@ private:
             case 0:
             {
                 // Do not crash the program
-				std::cout << "Container image name " << properties.c_str() << "is improperly formed and could not be parsed in SetRepositoryImageTag";
+				cout << "Container image name " << properties.c_str() << "is improperly formed and could not be parsed in SetRepositoryImageTag";
 				stdout("Container image name (%s) is improperly formed and could not be parsed in SetRepositoryImageTag", properties.c_str());
                 syslog(LOG_WARNING, "Container image name (%s) is improperly formed and could not be parsed in SetRepositoryImageTag", properties.c_str());
                 break;
