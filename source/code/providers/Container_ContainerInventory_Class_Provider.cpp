@@ -64,7 +64,6 @@ private:
             {
                 // Do not crash the program
 				cout << "Container image name " << properties.c_str() << "is improperly formed and could not be parsed in SetRepositoryImageTag";
-				stdout("Container image name (%s) is improperly formed and could not be parsed in SetRepositoryImageTag", properties.c_str());
                 syslog(LOG_WARNING, "Container image name (%s) is improperly formed and could not be parsed in SetRepositoryImageTag", properties.c_str());
                 break;
             }
@@ -97,7 +96,6 @@ private:
                 {
                     cJSON* tags = cJSON_GetObjectItem(entry, "RepoTags");
 					std::cout << "Got RepoTags of size " << cJSON_GetArraySize(tags);
-					stdout("Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     syslog(LOG_WARNING, "Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     if (tags && cJSON_GetArraySize(tags))
                     {
@@ -107,14 +105,12 @@ private:
                     else
                     {
                        std::cout << "The container has no RepoTags :" << cJSON_GetObjectItem(entry, "Id")->valuestring;
-                       stdout("The container has no RepoTags : %s", cJSON_GetObjectItem(entry, "Id")->valuestring);
                        syslog(LOG_INFO, "The container has no RepoTags: %s", cJSON_GetObjectItem(entry, "Id")->valuestring);
                     }
                 }
                 else
                 {
 					std::cout << "Attempt in GenerateImageNameMap to get element " << i << "of image list returned null";
-					stdout("Attempt in GenerateImageNameMap to get element %d of image list returned null", i);
                     syslog(LOG_WARNING, "Attempt in GenerateImageNameMap to get element %d of image list returned null", i);
                 }
             }
@@ -125,7 +121,6 @@ private:
         else
         {
 			std::cout << "API call in GenerateImageNameMap to list images returned null";
-			stdout("API call in GenerateImageNameMap to list images returned null");
             syslog(LOG_WARNING, "API call in GenerateImageNameMap to list images returned null");
         }
 
@@ -175,7 +170,6 @@ private:
         else
         {
 			std::cout << "Attempt in ObtainContainerConfig to get container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "config information returned null";
-			stdout("Attempt in ObtainContainerConfig to get container %s config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
             syslog(LOG_WARNING, "Attempt in ObtainContainerConfig to get container %s config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
     }
@@ -199,7 +193,6 @@ private:
             {
                 exitCode = 128;
 				std::cout << "Container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "returned negative exit code";
-				stdout("Container %s returned negative exit code", cJSON_GetObjectItem(entry, "Id")->valuestring);
                 syslog(LOG_NOTICE, "Container %s returned negative exit code", cJSON_GetObjectItem(entry, "Id")->valuestring);
             }
 
@@ -239,7 +232,6 @@ private:
         else
         {
 			std::cout << "Attempt in ObtainContainerState to get container"<< cJSON_GetObjectItem(entry, "Id")->valuestring << "state information returned null";
-			stdout("Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
             syslog(LOG_WARNING, "Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
     }
@@ -270,7 +262,6 @@ private:
         else
         {
 			std::cout << "Attempt in ObtainContainerHostConfig to get container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "host config information returned null";
-			stdout("Attempt in ObtainContainerHostConfig to get container %s host config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
             syslog(LOG_WARNING, "Attempt in ObtainContainerHostConfig to get container %s host config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
     }
@@ -308,7 +299,6 @@ private:
             instance.ImageId_value(imageId.c_str());
 
 			std::cout << "namemap.count for container" << id.c_str() << ":" << nameMap.count(imageId);
-			stdout("namemap.count for container %s : %d", id.c_str(), nameMap.count(imageId));
             syslog(LOG_INFO, "namemap.count for container %s : %d", id.c_str(), nameMap.count(imageId));
             if (nameMap.count(imageId))
             {
@@ -327,7 +317,6 @@ private:
         else
         {
 			std::cout"Attempt in InspectContainer to inspect" << id.c_str() << "returned null");
-			stdout("Attempt in InspectContainer to inspect %s returned null", id.c_str());
             syslog(LOG_WARNING, "Attempt in InspectContainer to inspect %s returned null", id.c_str());
         }
 
@@ -359,7 +348,6 @@ public:
             // Set all data
             string id = string(*i);
 			std::cout << "in QueryAll Creating containerinventory instance for containter: " << id.c_str();
-			stdout("in QueryAll Creating containerinventory instance for containter: %s", id.c_str());
             syslog(LOG_INFO, "in QueryAll Creating containerinventory instance for containter: %s", id.c_str());
             Container_ContainerInventory_Class instance = InspectContainer(id, nameMap);
             instance.Computer_value(hostname.c_str());
@@ -421,14 +409,12 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
     catch (std::exception &e)
     {
 		std::cout << "Container_ContainerInventory:" << e.what();
-		stdout("Container_ContainerInventory %s", e.what());
         syslog(LOG_ERR, "Container_ContainerInventory %s", e.what());
         context.Post(MI_RESULT_FAILED);
     }
     catch (...)
     {
 		std::cout << "Container_ContainerInventory Unknown exception";
-		stdout("Container_ContainerInventory Unknown exception");
         syslog(LOG_ERR, "Container_ContainerInventory Unknown exception");
         context.Post(MI_RESULT_FAILED);
     }
