@@ -316,7 +316,7 @@ private:
         }
         else
         {
-			std::cout"Attempt in InspectContainer to inspect" << id.c_str() << "returned null");
+			std::cout<<"Attempt in InspectContainer to inspect" << id.c_str() << "returned null");
             syslog(LOG_WARNING, "Attempt in InspectContainer to inspect %s returned null", id.c_str());
         }
 
