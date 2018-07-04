@@ -96,8 +96,6 @@ private:
                 if (entry)
                 {
                     cJSON* tags = cJSON_GetObjectItem(entry, "RepoTags");
-					std::cout << "Got RepoTags of size " << cJSON_GetArraySize(tags);
-					stdout("Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     syslog(LOG_WARNING, "Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     if (tags && cJSON_GetArraySize(tags))
                     {
@@ -113,8 +111,6 @@ private:
                 }
                 else
                 {
-					std::cout << "Attempt in GenerateImageNameMap to get element " << i << "of image list returned null";
-					stdout("Attempt in GenerateImageNameMap to get element %d of image list returned null", i);
                     syslog(LOG_WARNING, "Attempt in GenerateImageNameMap to get element %d of image list returned null", i);
                 }
             }
@@ -124,8 +120,6 @@ private:
         }
         else
         {
-			std::cout << "API call in GenerateImageNameMap to list images returned null";
-			stdout("API call in GenerateImageNameMap to list images returned null");
             syslog(LOG_WARNING, "API call in GenerateImageNameMap to list images returned null");
         }
 
