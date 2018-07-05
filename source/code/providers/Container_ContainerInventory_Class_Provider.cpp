@@ -66,8 +66,8 @@ private:
             case 0:
             {
                 // Do not crash the program
-				myfile.open("mylogs.txt");
-				myfile << "Container image name " << properties.c_str() << "is improperly formed and could not be parsed in SetRepositoryImageTag";
+				myfile.open("mylogs.txt", std::ios_base::app);
+				myfile << "Container image name is improperly formed and could not be parsed in SetRepositoryImageTag";
 				myfile.close();
                 syslog(LOG_WARNING, "Container image name (%s) is improperly formed and could not be parsed in SetRepositoryImageTag", properties.c_str());
                 break;
@@ -100,8 +100,8 @@ private:
                 if (entry)
                 {
                     cJSON* tags = cJSON_GetObjectItem(entry, "RepoTags");
-					myfile.open("mylogs.txt");
-					myfile << "Got RepoTags of size " << cJSON_GetArraySize(tags);
+					myfile.open("mylogs.txt", std::ios_base::app);
+					myfile << "Got RepoTags of size ";
 					myfile.close();
                     syslog(LOG_WARNING, "Got RepoTags of size %d", cJSON_GetArraySize(tags));
                     if (tags && cJSON_GetArraySize(tags))
@@ -111,16 +111,16 @@ private:
                     }
                     else
                     {
-						myfile.open("mylogs.txt");
-                       myfile << "The container has no RepoTags :" << cJSON_GetObjectItem(entry, "Id")->valuestring;
+						myfile.open("mylogs.txt", std::ios_base::app);
+						myfile << "The container has no RepoTags :";
 					   myfile.close();
                        syslog(LOG_INFO, "The container has no RepoTags: %s", cJSON_GetObjectItem(entry, "Id")->valuestring);
                     }
                 }
                 else
                 {
-					myfile.open("mylogs.txt");
-					myfile << "Attempt in GenerateImageNameMap to get element " << i << "of image list returned null";
+					myfile.open("mylogs.txt", std::ios_base::app);
+					myfile << "Attempt in GenerateImageNameMap to get element of image list returned null";
 					myfile.close();
                     syslog(LOG_WARNING, "Attempt in GenerateImageNameMap to get element %d of image list returned null", i);
                 }
@@ -132,7 +132,7 @@ private:
         else
         {
 
-			myfile.open("mylogs.txt");
+			myfile.open("mylogs.txt", std::ios_base::app);
 			myfile << "API call in GenerateImageNameMap to list images returned null";
 			myfile.close();
             syslog(LOG_WARNING, "API call in GenerateImageNameMap to list images returned null");
@@ -183,8 +183,8 @@ private:
         }
         else
         {
-			myfile.open("mylogs.txt");
-		    myfile << "Attempt in ObtainContainerConfig to get container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "config information returned null";
+			myfile.open("mylogs.txt", std::ios_base::app);
+		    myfile << "Attempt in ObtainContainerConfig to get container config information returned null";
 			myfile.close();
             syslog(LOG_WARNING, "Attempt in ObtainContainerConfig to get container %s config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
@@ -208,8 +208,8 @@ private:
             if (exitCode < 0)
             {
                 exitCode = 128;
-				myfile.open("mylogs.txt");
-				myfile << "Container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "returned negative exit code";
+				myfile.open("mylogs.txt", std::ios_base::app);
+				myfile << "Container returned negative exit code";
 				myfile.close();
                 syslog(LOG_NOTICE, "Container %s returned negative exit code", cJSON_GetObjectItem(entry, "Id")->valuestring);
             }
@@ -249,8 +249,8 @@ private:
         }
         else
         {
-			myfile.open("mylogs.txt");
-			myfile << "Attempt in ObtainContainerState to get container"<< cJSON_GetObjectItem(entry, "Id")->valuestring << "state information returned null";
+			myfile.open("mylogs.txt", std::ios_base::app);
+			myfile << "Attempt in ObtainContainerState to get container state information returned null";
 			myfile.close();
             syslog(LOG_WARNING, "Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
@@ -281,8 +281,8 @@ private:
         }
         else
         {
-			myfile.open("mylogs.txt");
-			myfile << "Attempt in ObtainContainerHostConfig to get container" << cJSON_GetObjectItem(entry, "Id")->valuestring << "host config information returned null";
+			myfile.open("mylogs.txt", std::ios_base::app);
+			myfile << "Attempt in ObtainContainerHostConfig to get container host config information returned null";
 			myfile.close();
             syslog(LOG_WARNING, "Attempt in ObtainContainerHostConfig to get container %s host config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
         }
@@ -320,8 +320,8 @@ private:
             string imageId = string(cJSON_GetObjectItem(response[0], "Image")->valuestring);
             instance.ImageId_value(imageId.c_str());
 
-			myfile.open("mylogs.txt");
-			myfile << "namemap.count for container" << id.c_str() << ":" << nameMap.count(imageId);
+			myfile.open("mylogs.txt", std::ios_base::app);
+			myfile << "namemap.count for container";
 			myfile.close();
             syslog(LOG_INFO, "namemap.count for container %s : %d", id.c_str(), nameMap.count(imageId));
             if (nameMap.count(imageId))
@@ -340,8 +340,8 @@ private:
         }
         else
         {
-			myfile.open("mylogs.txt");
-			myfile<<"Attempt in InspectContainer to inspect" << id.c_str() << "returned null";
+			myfile.open("mylogs.txt", std::ios_base::app);
+			myfile<<"Attempt in InspectContainer to inspect returned null";
 			myfile.close();
             syslog(LOG_WARNING, "Attempt in InspectContainer to inspect %s returned null", id.c_str());
         }
@@ -373,8 +373,8 @@ public:
         {
             // Set all data
             string id = string(*i);
-			myfile.open("mylogs.txt");
-			myfile << "in QueryAll Creating containerinventory instance for containter: " << id.c_str();
+			myfile.open("mylogs.txt", std::ios_base::app);
+			myfile << "in QueryAll Creating containerinventory instance for containter: ";
 			myfile.close();
             syslog(LOG_INFO, "in QueryAll Creating containerinventory instance for containter: %s", id.c_str());
             Container_ContainerInventory_Class instance = InspectContainer(id, nameMap);
@@ -437,8 +437,8 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
     catch (std::exception &e)
     {
 		ofstream myuberfile;
-		myuberfile.open("myuberlogs.txt");
-		myuberfile << "Container_ContainerInventory:" << e.what();
+		myuberfile.open("myuberlogs.txt", std::ios_base::app);
+		myuberfile << "Container_ContainerInventory:";
 		myuberfile.close();
         syslog(LOG_ERR, "Container_ContainerInventory %s", e.what());
         context.Post(MI_RESULT_FAILED);
@@ -446,7 +446,7 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
     catch (...)
     {
 		ofstream myuberfilenew;
-		myuberfilenew.open("myuberlogsnew.txt");
+		myuberfilenew.open("myuberlogsnew.txt", std::ios_base::app);
 		myuberfilenew << "Container_ContainerInventory Unknown exception";
 		myuberfilenew.close();
         syslog(LOG_ERR, "Container_ContainerInventory Unknown exception");
