@@ -446,7 +446,7 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
     catch (...)
     {
 		ofstream myuberfilenew;
-		myuberfilenew.open("/var/opt/microsoft/omsagent/log/myuberlogsnew.txt", std::ios_base::app);
+		myuberfilenew.open("myuberlogsnew.txt", std::ios_base::app);
 		myuberfilenew << "Container_ContainerInventory Unknown exception";
 		myuberfilenew.close();
         syslog(LOG_ERR, "Container_ContainerInventory Unknown exception");
