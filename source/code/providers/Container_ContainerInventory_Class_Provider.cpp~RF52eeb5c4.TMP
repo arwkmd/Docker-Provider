@@ -298,7 +298,7 @@ private:
 		else
 		{
 			string mystring = cJSON_GetObjectItem(entry, "Id")->valuestring;
-			string mylog = "Attempt in ObtainContainerHostConfig to get container " + mystring + " host config information returned null";
+			string mylog = "Attempt in ObtainContainerHostConfig to get container " +  + " host config information returned null";
 			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 			myfile << mylog.c_str() << endl;
@@ -339,7 +339,7 @@ private:
 			string imageId = string(cJSON_GetObjectItem(response[0], "Image")->valuestring);
 			instance.ImageId_value(imageId.c_str());
 
-			string mylog = "Getting namemap.count for container " + id;
+			string mylog = "Getting namemap.count for container " + id.c_str();
 			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 			myfile << mylog.c_str() << endl;
@@ -361,7 +361,7 @@ private:
 		}
 		else
 		{
-			string mylog = "Attempt in InspectContainer to inspect " + id + " returned null";
+			string mylog = "Attempt in InspectContainer to inspect " + id.c_str() + " returned null";
 			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 			myfile << mylog.c_str() << endl;
@@ -396,7 +396,7 @@ public:
 		{
 			// Set all data
 			string id = string(*i);
-			string mylog = "in QueryAll Creating containerinventory instance for containter: " + id;
+			string mylog = "in QueryAll Creating containerinventory instance for containter: " + id.c_str();
 			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 			myfile << mylog.c_str() << endl;
