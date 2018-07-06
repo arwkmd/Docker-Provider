@@ -115,7 +115,7 @@ private:
 					else
 					{
 						string myid = cJSON_GetObjectItem(entry, "Id")->valuestring;
-						string mylog = "The container has no RepoTags :" + myid;
+						string mylog = "The container has no RepoTags :" + cJSON_GetObjectItem(entry, "Id")->valuestring;
 						ofstream myfile;
 						myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 						myfile << mylog.c_str() << endl;
