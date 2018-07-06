@@ -461,7 +461,8 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
 
 	catch (std::exception &e)
 	{
-		string mylog =  "Container_ContainerInventory " + e.what();
+		string myexception = e.what();
+		string mylog =  "Container_ContainerInventory " + myexeception;
 		ofstream myuberfile;
 		myuberfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 		myuberfile << mylog.c_str() << endl;
