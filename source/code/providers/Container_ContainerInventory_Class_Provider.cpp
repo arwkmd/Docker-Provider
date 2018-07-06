@@ -65,7 +65,7 @@ private:
 		case 0:
 		{
 			// Do not crash the program
-			string mylog = "Container image name (" + properties.c_str() + ") is improperly formed and could not be parsed in SetRepositoryImageTag";
+			string mylog = "Container image name (" + properties + ") is improperly formed and could not be parsed in SetRepositoryImageTag";
 			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/providerlogs.txt", std::ios_base::app);
 			myfile << mylog.c_str() << endl;
