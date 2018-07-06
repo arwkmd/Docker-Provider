@@ -8,7 +8,7 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <vector>
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include "../cjson/cJSON.h"
 #include "../dockerapi/DockerRemoteApi.h"
