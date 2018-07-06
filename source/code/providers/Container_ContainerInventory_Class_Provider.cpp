@@ -24,7 +24,6 @@ class ContainerQuery
 {
 private:
 
-	static ofstream myfile;
 	///
 	/// Seperate the repository, image, and image tag strings
 	///
@@ -66,6 +65,7 @@ private:
 		case 0:
 		{
 			// Do not crash the program
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "Container image name is improperly formed and could not be parsed in SetRepositoryImageTag";
 			myfile.close();
@@ -100,6 +100,7 @@ private:
 				if (entry)
 				{
 					cJSON* tags = cJSON_GetObjectItem(entry, "RepoTags");
+					ofstream myfile;
 					myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 					myfile << "Got RepoTags of size ";
 					myfile.close();
@@ -111,6 +112,7 @@ private:
 					}
 					else
 					{
+						ofstream myfile;
 						myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 						myfile << "The container has no RepoTags :";
 						myfile.close();
@@ -119,6 +121,7 @@ private:
 				}
 				else
 				{
+					ofstream myfile;
 					myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 					myfile << "Attempt in GenerateImageNameMap to get element of image list returned null";
 					myfile.close();
@@ -131,7 +134,7 @@ private:
 		}
 		else
 		{
-
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "API call in GenerateImageNameMap to list images returned null";
 			myfile.close();
@@ -183,6 +186,7 @@ private:
 		}
 		else
 		{
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "Attempt in ObtainContainerConfig to get container config information returned null";
 			myfile.close();
@@ -208,6 +212,7 @@ private:
 			if (exitCode < 0)
 			{
 				exitCode = 128;
+				ofstream myfile;
 				myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 				myfile << "Container returned negative exit code";
 				myfile.close();
@@ -249,6 +254,7 @@ private:
 		}
 		else
 		{
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "Attempt in ObtainContainerState to get container state information returned null";
 			myfile.close();
@@ -281,6 +287,7 @@ private:
 		}
 		else
 		{
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "Attempt in ObtainContainerHostConfig to get container host config information returned null";
 			myfile.close();
@@ -320,6 +327,7 @@ private:
 			string imageId = string(cJSON_GetObjectItem(response[0], "Image")->valuestring);
 			instance.ImageId_value(imageId.c_str());
 
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "namemap.count for container";
 			myfile.close();
@@ -340,6 +348,7 @@ private:
 		}
 		else
 		{
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "Attempt in InspectContainer to inspect returned null";
 			myfile.close();
@@ -373,6 +382,7 @@ public:
 		{
 			// Set all data
 			string id = string(*i);
+			ofstream myfile;
 			myfile.open("/var/opt/microsoft/omsagent/log/mylogs.txt", std::ios_base::app);
 			myfile << "in QueryAll Creating containerinventory instance for containter: ";
 			myfile.close();
