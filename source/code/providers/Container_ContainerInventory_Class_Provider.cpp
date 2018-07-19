@@ -10,6 +10,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <ctime>
 
 #include "../cjson/cJSON.h"
 #include "../dockerapi/DockerRemoteApi.h"
@@ -345,12 +346,19 @@ private:
 		openlog("rashmi_rashmi", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
 		syslog(LOG_WARNING, "rashmi_rashmi -InspectContainer");
 		closelog();
-
-        // New inventory entry
 		string mylog = "---------------------------------------------------------------------";
 		ofstream myfile;
 		myfile.open("/var/opt/microsoft/omsagent/log/inventorylogs.txt", std::ios_base::app);
 		myfile << mylog.c_str() << endl;
+		time_t rawtime;
+		std::time(&rawtime);
+		struct tm *tinfo = std::localtime(&rawtime);
+		char buffer[12];
+		strftime(buffer, 12, "%F", tinfo);
+		mylog = std::string(buffer);
+		myfile << mylog.c_str() << endl;
+
+        // New inventory entry
         Container_ContainerInventory_Class instance;
 		mylog = "done creating object of type container inventory";
 		myfile << mylog.c_str() << endl;

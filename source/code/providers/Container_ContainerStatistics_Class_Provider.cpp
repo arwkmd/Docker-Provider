@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include "../dockerapi/DockerRemoteApi.h"
 #include "../dockerapi/DockerRestHelper.h"
@@ -232,6 +233,13 @@ private:
 		string mylog = "---------------------------------------------------------------------";
 		ofstream myfile;
 		myfile.open("/var/opt/microsoft/omsagent/log/containerstatisticslogs.txt", std::ios_base::app);
+		myfile << mylog.c_str() << endl;
+		time_t rawtime;
+		std::time(&rawtime);
+		struct tm *tinfo = std::localtime(&rawtime);
+		char buffer[12];
+		strftime(buffer, 12, "%F", tinfo);
+		mylog = std::string(buffer);
 		myfile << mylog.c_str() << endl;
 		try {
 			mylog = "in try block";
