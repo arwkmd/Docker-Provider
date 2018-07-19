@@ -355,21 +355,6 @@ private:
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %I:%M:%S", timeinfo);
 		std::string str(buffer);
 		mylog = str;
-		myfile << mylog.c_str() << endl;
-		mylog = "In inspect container";
-		myfile << mylog.c_str() << endl;
-		try {
-			throw "rashmis-exception";
-		}
-		catch (std::exception &e)
-		{
-			mylog = "inside standard exception";
-			myfile << mylog.c_str() << endl;
-		}
-		catch (...) {
-			mylog = "not inside standard exception";
-			myfile << mylog.c_str() << endl;
-		}
 
         // New inventory entry
         Container_ContainerInventory_Class instance;
@@ -382,7 +367,26 @@ private:
 			{
 				mylog = "getting id";
 				myfile << mylog.c_str() << endl;
+				if (cJSON_GetObjectItem(response[0], "Id")) {
+					mylog = "id:not null";
+					myfile << mylog.c_str() << endl;
+				}
+				else {
+					mylog = "id:null";
+					myfile << mylog.c_str() << endl;
+				}
+				if (cJSON_GetObjectItem(response[0], "Created")) {
+					mylog = "Created:not null";
+					myfile << mylog.c_str() << endl;
+				}
+				else {
+					mylog = "Created:null";
+					myfile << mylog.c_str() << endl;
+				}
+				
 				instance.InstanceID_value(cJSON_GetObjectItem(response[0], "Id")->valuestring);
+				mylog = "got id value string";
+				myfile << mylog.c_str() << endl;
 				instance.CreatedTime_value(cJSON_GetObjectItem(response[0], "Created")->valuestring);
 				char* containerName = cJSON_GetObjectItem(response[0], "Name")->valuestring;
 				if (strlen(containerName))
