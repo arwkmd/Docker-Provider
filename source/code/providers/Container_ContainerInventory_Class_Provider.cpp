@@ -355,7 +355,7 @@ private:
 		strftime(buffer, sizeof(buffer), "%d-%m-%Y %I:%M:%S", timeinfo);
 		std::string str(buffer);
 		mylog = str;
-
+		myfile << mylog.c_str() << endl;
         // New inventory entry
         Container_ContainerInventory_Class instance;
 		try {
