@@ -9,6 +9,8 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 #include "../dockerapi/DockerRemoteApi.h"
 #include "../dockerapi/DockerRestHelper.h"
@@ -227,32 +229,63 @@ private:
     ///
     static void TrySetContainerCpuData(Container_ContainerStatistics_Class& instance, cJSON* stats, map<string, unsigned long long> previousStats)
     {
+		string mylog = "---------------------------------------------------------------------";
+		ofstream myfile;
+		myfile.open("/var/opt/microsoft/omsagent/log/containerstatisticslogs.txt", std::ios_base::app);
+		myfile << mylog.c_str() << endl;
 		try {
+			mylog = "in try block";
+			myfile << mylog.c_str() << endl;
 			instance.CPUTotal_value(0);
+			mylog = "done setting cpu total value";
+			myfile << mylog.c_str() << endl;
 			instance.CPUTotalPct_value(0);
+			mylog = "done setting cpu total pct value";
+			myfile << mylog.c_str() << endl;
 
 			if (stats)
 			{
+				mylog = "inside if stats";
+				myfile << mylog.c_str() << endl;
 				cJSON* cpu_stats = cJSON_GetObjectItem(stats, "cpu_stats");
+				mylog = "done getting object item cpu_stats";
+				myfile << mylog.c_str() << endl;
 
 				if (cpu_stats)
 				{
+					mylog = "inside if cpu_stats";
+					myfile << mylog.c_str() << endl;
 					cJSON* cpu_usage = cJSON_GetObjectItem(cpu_stats, "cpu_usage");
+					mylog = "done getting object item cpu_usage";
+					myfile << mylog.c_str() << endl;
 
 					if (cpu_usage)
 					{
+						mylog = "inside if cpu_usage";
+						myfile << mylog.c_str() << endl;
 						unsigned long long containerUsage = (unsigned long long)cJSON_GetObjectItem(cpu_usage, "total_usage")->valuedouble;
+						mylog = "done getting object item total_usage";
+						myfile << mylog.c_str() << endl;
 						unsigned long long systemTotalUsage = (unsigned long long)cJSON_GetObjectItem(cpu_stats, "system_cpu_usage")->valuedouble;
-
+						mylog = "done getting object item system_cpu_usage";
+						myfile << mylog.c_str() << endl;
 						instance.CPUTotal_value((unsigned long)(containerUsage / (unsigned long long)1000000000));
-
+						mylog = "done setting cpu total_value";
+						myfile << mylog.c_str() << endl;
 						if (systemTotalUsage - previousStats["system"])
 						{
+							mylog = "inside if condition subtract check";
+							myfile << mylog.c_str() << endl;
 							instance.CPUTotalPct_value((unsigned short)((containerUsage - previousStats["container"]) * 100 / (systemTotalUsage - previousStats["system"])));
+							mylog = "done setting cpu total pct value";
+							myfile << mylog.c_str() << endl;
 						}
 					}
 				}
 			}
+			mylog = "---------------------------------------------------------------------";
+			myfile << mylog.c_str() << endl;
+			myfile.close();
 		}
 		catch (std::exception &e)
 		{

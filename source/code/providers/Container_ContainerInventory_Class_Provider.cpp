@@ -8,6 +8,8 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include "../cjson/cJSON.h"
 #include "../dockerapi/DockerRemoteApi.h"
@@ -340,43 +342,81 @@ private:
     ///
     static Container_ContainerInventory_Class InspectContainer(string& id, map<string, vector<string> >& nameMap)
     {
+		openlog("rashmi_rashmi", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+		syslog(LOG_WARNING, "rashmi_rashmi -InspectContainer");
+		closelog();
+
         // New inventory entry
+		string mylog = "---------------------------------------------------------------------";
+		ofstream myfile;
+		myfile.open("/var/opt/microsoft/omsagent/log/inventorylogs.txt", std::ios_base::app);
+		myfile << mylog.c_str() << endl;
         Container_ContainerInventory_Class instance;
+		mylog = "done creating object of type container inventory";
+		myfile << mylog.c_str() << endl;
 		try {
 			// Inspect container
 			vector<string> request(1, DockerRestHelper::restDockerInspect(id));
+			mylog = "done declaring request";
+			myfile << mylog.c_str() << endl;
 			vector<cJSON*> response = getResponse(request);
-
+			mylog = "done getting response";
+			myfile << mylog.c_str() << endl;
 			// See http://docs.docker.com/reference/api/Container_remote_api_v1.21/#inspect-a-container for example output
 			if (!response.empty() && response[0])
 			{
+				mylog = "inside if condition";
+				myfile << mylog.c_str() << endl;
 				instance.InstanceID_value(cJSON_GetObjectItem(response[0], "Id")->valuestring);
+				mylog = "done getting id from response";
+				myfile << mylog.c_str() << endl;
 				instance.CreatedTime_value(cJSON_GetObjectItem(response[0], "Created")->valuestring);
-
+				mylog = "done getting created from response";
+				myfile << mylog.c_str() << endl;
 				char* containerName = cJSON_GetObjectItem(response[0], "Name")->valuestring;
-
+				mylog = "done getting name from response";
+				myfile << mylog.c_str() << endl;
 				if (strlen(containerName))
 				{
 					// Remove the leading / from the name if it exists (this is an API issue)
 					instance.ElementName_value(containerName[0] == '/' ? containerName + 1 : containerName);
+					mylog = "done removing / from container name";
+					myfile << mylog.c_str() << endl;
 				}
 
 				string imageId = string(cJSON_GetObjectItem(response[0], "Image")->valuestring);
+				mylog = "done getting image from response";
+				myfile << mylog.c_str() << endl;
 				instance.ImageId_value(imageId.c_str());
-
+				mylog = "done setting imageid_value from response";
+				myfile << mylog.c_str() << endl;
 				if (nameMap.count(imageId))
 				{
 					instance.Repository_value(nameMap[imageId][0].c_str());
+					mylog = "done setting repo value";
+					myfile << mylog.c_str() << endl;
 					instance.Image_value(nameMap[imageId][1].c_str());
+					mylog = "done setting image value";
+					myfile << mylog.c_str() << endl;
 					instance.ImageTag_value(nameMap[imageId][2].c_str());
+					mylog = "done setting image tag value";
+					myfile << mylog.c_str() << endl;
 				}
 
 				ObtainContainerConfig(instance, response[0]);
+				mylog = "done obtaining container config";
+				myfile << mylog.c_str() << endl;
 				ObtainContainerState(instance, response[0]);
+				mylog = "done obtaining container state";
+				myfile << mylog.c_str() << endl;
 				ObtainContainerHostConfig(instance, response[0]);
+				mylog = "done obtaining container host config";
+				myfile << mylog.c_str() << endl;
 
 				// Clean up object
 				cJSON_Delete(response[0]);
+				mylog = "done deleting response";
+				myfile << mylog.c_str() << endl;
 			}
 			else
 			{
@@ -391,7 +431,11 @@ private:
 		{
 			syslog(LOG_ERR, "Container_ContainerInventory - GenerateImageNameMap Unknown exception");
 		}
-
+		mylog = "returning instance";
+		myfile << mylog.c_str() << endl;
+		mylog = "---------------------------------------------------------------------";
+		myfile << mylog.c_str() << endl;
+		myfile.close();
         return instance;
     }
 
