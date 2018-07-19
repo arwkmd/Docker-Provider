@@ -31,6 +31,8 @@
 #include <limits.h>
 #include <ctype.h>
 #include "cJSON.h"
+#include <iostream>
+#include <fstream>
 static const char *ep;
 
 const char *cJSON_GetErrorPtr(void) {return ep;}
@@ -673,12 +675,39 @@ cJSON *cJSON_GetArrayItem(cJSON *array,int item)
 
 cJSON *cJSON_GetObjectItem(cJSON *object, const char *string)
 {
-    cJSON *c = (object != NULL) ? object->child : NULL;
-    while ((c != NULL) && (cJSON_strcasecmp(c->string, string)))
-    {
-        c = c->next;
-    }
-    return c;
+	if (strcmp(string, "Id")) {
+		cJSON *c = (object != NULL) ? object->child : NULL;
+		while ((c != NULL) && (cJSON_strcasecmp(c->string, string)))
+		{
+			c = c->next;
+		}
+		return c;
+	}
+	else {
+		string mylog = "in cjson get object item for id";
+		ofstream myfile;
+		myfile.open("/var/opt/microsoft/omsagent/log/inventorylogs.txt", std::ios_base::app);
+		myfile << mylog.c_str() << endl;
+		myfile.flush();
+		cJSON *c = (object != NULL) ? object->child : NULL;
+		mylog = "got c";
+		myfile << mylog.c_str();
+		myfile.flush();
+		while ((c != NULL) && (cJSON_strcasecmp(c->string, string)))
+		{
+			mylog = "in while";
+			myfile << mylog.c_str();
+			myfile.flush();
+			c = c->next;
+			mylog = "done getting c->next";
+			myfile << mylog.c_str();
+			myfile.flush();
+		}
+		mylog = "returning c";
+		myfile << mylog.c_str();
+		myfile.flush();
+		return c;
+	}
 }
 
 /* Utility for array list handling. */

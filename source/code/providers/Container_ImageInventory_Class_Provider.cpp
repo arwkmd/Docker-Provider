@@ -158,84 +158,43 @@ private:
     ///
     static void ObtainContainerState(vector<Container_ImageInventory_Class>& instances, map<string, int>& idTable, cJSON* entry)
     {
-		string mylog = "---------------------------------------------------------------------";
-		ofstream myfile;
-		myfile.open("/var/opt/microsoft/omsagent/log/imageinventorylogs.txt", std::ios_base::app);
-		myfile << mylog.c_str() << endl;
-
-		time_t rawtime;
-		struct tm * timeinfo;
-		char buffer[80];
-		time(&rawtime);
-		timeinfo = localtime(&rawtime);
-		strftime(buffer, sizeof(buffer), "%d-%m-%Y %I:%M:%S", timeinfo);
-		std::string str(buffer);
-		mylog = str;
-		myfile << mylog.c_str() << endl;
-
 		try {
-			mylog = "in try block";
-			myfile << mylog.c_str() << endl;
 			cJSON* state = cJSON_GetObjectItem(entry, "State");
-			mylog = "done getting object item state";
-			myfile << mylog.c_str() << endl;
 			if (state)
 			{
-				mylog = "inside if state condition";
-				myfile << mylog.c_str() << endl;
 				string id = string(cJSON_GetObjectItem(entry, "Image")->valuestring);
-				mylog = "done getting object item image";
-				myfile << mylog.c_str() << endl;
 				if (cJSON_GetObjectItem(state, "Running")->valueint)
 				{
-					mylog = "inside running state";
-					myfile << mylog.c_str() << endl;
 					// Running container
 					if (cJSON_GetObjectItem(state, "Paused")->valueint)
 					{
-						mylog = "inside paused state";
-						myfile << mylog.c_str() << endl;
 						// Paused container
 						instances[idTable[id]].Paused_value(instances[idTable[id]].Paused_value() + 1);
-						mylog = "done setting paused value";
-						myfile << mylog.c_str() << endl;
 					}
 					else
 					{
 						instances[idTable[id]].Running_value(instances[idTable[id]].Running_value() + 1);
-						mylog = "done setting running value";
-						myfile << mylog.c_str() << endl;
 					}
 				}
 				else
 				{
 					if (cJSON_GetObjectItem(state, "ExitCode")->valueint)
 					{
-						mylog = "done getting object item exit code";
-						myfile << mylog.c_str() << endl;
 						// Container exited nonzero
 						instances[idTable[id]].Failed_value(instances[idTable[id]].Failed_value() + 1);
-						mylog = "done setting failed value";
-						myfile << mylog.c_str() << endl;
 					}
 					else
 					{
 						// Container exited normally
 						instances[idTable[id]].Stopped_value(instances[idTable[id]].Stopped_value() + 1);
-						mylog = "done setting stopped value";
-						myfile << mylog.c_str() << endl;
 					}
 				}
 
 				instances[idTable[id]].Total_value(instances[idTable[id]].Total_value() + 1);
-				mylog = "done setting total value";
-				myfile << mylog.c_str() << endl;
 			}
 			else
 			{
 				syslog(LOG_WARNING, "Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
-				mylog = "done loggin sys warning for state information null";
-				myfile << mylog.c_str() << endl;
 			}
 		}
 		catch (std::exception &e)
@@ -246,9 +205,6 @@ private:
 		{
 			syslog(LOG_ERR, "Container_ImageInventory - ObtainContainerState - Unknown exception");
 		}
-		mylog = "---------------------------------------------------------------------";
-		myfile << mylog.c_str() << endl;
-		myfile.close();
     }
 
     ///
