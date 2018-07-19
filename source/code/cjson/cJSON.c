@@ -687,24 +687,24 @@ cJSON *cJSON_GetObjectItem(cJSON *object, const char *string)
 		std::string mylog = "in cjson get object item for id";
 		std::ofstream myfile;
 		myfile.open("/var/opt/microsoft/omsagent/log/inventorylogs.txt", std::ios_base::app);
-		myfile << mylog.c_str() << endl;
+		myfile << mylog.c_str() << std::endl;
 		myfile.flush();
 		cJSON *c = (object != NULL) ? object->child : NULL;
 		mylog = "got c";
-		myfile << mylog.c_str();
+		myfile << mylog.c_str() << std::endl;
 		myfile.flush();
 		while ((c != NULL) && (cJSON_strcasecmp(c->string, string)))
 		{
 			mylog = "in while";
-			myfile << mylog.c_str();
+			myfile << mylog.c_str() << std::endl;
 			myfile.flush();
 			c = c->next;
 			mylog = "done getting c->next";
-			myfile << mylog.c_str();
+			myfile << mylog.c_str() << std::endl;
 			myfile.flush();
 		}
 		mylog = "returning c";
-		myfile << mylog.c_str();
+		myfile << mylog.c_str() << std::endl;
 		myfile.flush();
 		return c;
 	}
