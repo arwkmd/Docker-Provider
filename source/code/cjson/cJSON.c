@@ -685,7 +685,7 @@ cJSON *cJSON_GetObjectItem(cJSON *object, const char *string)
 	}
 	else {
 		std::string mylog = "in cjson get object item for id";
-		ofstream myfile;
+		std::ofstream myfile;
 		myfile.open("/var/opt/microsoft/omsagent/log/inventorylogs.txt", std::ios_base::app);
 		myfile << mylog.c_str() << endl;
 		myfile.flush();
