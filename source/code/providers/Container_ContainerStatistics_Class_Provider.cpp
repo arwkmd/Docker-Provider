@@ -235,11 +235,13 @@ private:
 		myfile.open("/var/opt/microsoft/omsagent/log/containerstatisticslogs.txt", std::ios_base::app);
 		myfile << mylog.c_str() << endl;
 		time_t rawtime;
-		std::time(&rawtime);
-		struct tm *tinfo = std::localtime(&rawtime);
-		char buffer[12];
-		strftime(buffer, 12, "%F", tinfo);
-		mylog = std::string(buffer);
+		struct tm * timeinfo;
+		char buffer[80];
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+		strftime(buffer, sizeof(buffer), "%d-%m-%Y %I:%M:%S", timeinfo);
+		std::string str(buffer);
+		mylog = str;
 		myfile << mylog.c_str() << endl;
 		try {
 			mylog = "in try block";
