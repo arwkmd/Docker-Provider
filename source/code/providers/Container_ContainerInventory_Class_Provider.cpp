@@ -359,7 +359,7 @@ private:
 		mylog = "In inspect container";
 		myfile << mylog.c_str() << endl;
 		try {
-			throw "rashmis-exception"
+			throw "rashmis-exception";
 		}
 		catch (std::exception &e)
 		{
