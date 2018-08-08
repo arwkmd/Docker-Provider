@@ -238,6 +238,7 @@ void Container_HostInventory_Class_Provider::EnumerateInstances(
 {
     try
     {
+		syslog(LOG_WARNING, "Container_HostInventory - startime");
         string modeStr;
         if(getenv("MODE") != NULL) 
         {
@@ -250,6 +251,7 @@ void Container_HostInventory_Class_Provider::EnumerateInstances(
             context.Post(queryResult);
         }
         context.Post(MI_RESULT_OK);
+		syslog(LOG_WARNING, "Container_HostInventory - endime");
     }
     catch (std::exception &e)
     {

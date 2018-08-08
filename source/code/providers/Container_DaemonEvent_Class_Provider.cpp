@@ -213,7 +213,7 @@ public:
     static vector<Container_DaemonEvent_Class> QueryAll()
     {
         openlog("Container_DaemonEvent", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-
+		syslog(LOG_WARNING, "Container_DaemonEvent - startime");
         vector<Container_DaemonEvent_Class> result;
         int previousTime = GetPreviousTime();
         int currentTime = time(NULL);
@@ -319,6 +319,7 @@ public:
 			syslog(LOG_ERR, "Container_DaemonEvent - QueryAll - Unknown exception");
 		}
         SetPreviousTime(currentTime);
+		syslog(LOG_WARNING, "Container_DaemonEvent - endime");
         closelog();
         return result;
     }

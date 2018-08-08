@@ -208,6 +208,7 @@ void Container_Process_Class_Provider::EnumerateInstances(
 {
     try
     {
+		syslog(LOG_WARNING, "Container_Process - startime");
         string modeStr;
         if(getenv("MODE") != NULL) 
         {
@@ -223,6 +224,7 @@ void Container_Process_Class_Provider::EnumerateInstances(
             }
         }
         context.Post(MI_RESULT_OK);
+		syslog(LOG_WARNING, "Container_Process - endime");
     }
     catch (std::exception &e)
     {

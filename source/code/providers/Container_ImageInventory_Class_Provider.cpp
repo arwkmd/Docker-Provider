@@ -298,7 +298,7 @@ public:
     static vector<Container_ImageInventory_Class> QueryAll()
     {
         openlog("Container_ImageInventory", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-
+		syslog(LOG_WARNING, "Container_ImageInventory - startime");
         vector<Container_ImageInventory_Class> result;
         vector<Container_ImageInventory_Class> filteredResult;
         map<string, int> idTable;
@@ -409,6 +409,7 @@ public:
 		{
 			syslog(LOG_ERR, "Container_ImageInventory - QueryAll - Unknown exception");
 		}
+		syslog(LOG_WARNING, "Container_ImageInventory - endime");
         closelog();
         return filteredResult;
     }
