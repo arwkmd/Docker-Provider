@@ -298,7 +298,6 @@ public:
     static vector<Container_ImageInventory_Class> QueryAll()
     {
         openlog("Container_ImageInventory", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-		syslog(LOG_WARNING, "Container_ImageInventory - startime");
         vector<Container_ImageInventory_Class> result;
         vector<Container_ImageInventory_Class> filteredResult;
         map<string, int> idTable;
@@ -409,7 +408,6 @@ public:
 		{
 			syslog(LOG_ERR, "Container_ImageInventory - QueryAll - Unknown exception");
 		}
-		syslog(LOG_WARNING, "Container_ImageInventory - endime");
         closelog();
         return filteredResult;
     }
@@ -436,6 +434,7 @@ void Container_ImageInventory_Class_Provider::Unload(Context& context)
 void Container_ImageInventory_Class_Provider::EnumerateInstances(Context& context, const String& nameSpace, const PropertySet& propertySet, bool keysOnly, const MI_Filter* filter)
 {
 	try {
+		syslog(LOG_WARNING, "Container_ImageInventory - startime");
 		string modeStr;
 		if(getenv("MODE") != NULL)
 		{
@@ -451,6 +450,7 @@ void Container_ImageInventory_Class_Provider::EnumerateInstances(Context& contex
 			}
 		}
 		context.Post(MI_RESULT_OK);
+		syslog(LOG_WARNING, "Container_ImageInventory - endime");
 	}
 	catch (std::exception &e) {
 		syslog(LOG_ERR, "Container_ContainerImageInventory %s", e.what());

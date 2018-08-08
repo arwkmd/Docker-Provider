@@ -470,7 +470,6 @@ public:
     static vector<Container_ContainerInventory_Class> QueryAll()
     {
         openlog("Container_ContainerInventory", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-		syslog(LOG_WARNING, "Container_ContainerInventory - startime");
         // Get computer name
         string hostname = getDockerHostName();
 
@@ -516,7 +515,6 @@ public:
 		{
 			syslog(LOG_ERR, "Container_ContainerInventory - QueryAll Unknown exception");
 		}
-		syslog(LOG_WARNING, "Container_ContainerInventory - endime");
         closelog();
         return result;
     }
@@ -544,6 +542,7 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
 {
     try
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory - startime");
     	vector<Container_ContainerInventory_Class> queryResult = ContainerQuery::QueryAll();
 
     	for (unsigned i = 0; i < queryResult.size(); i++)
@@ -551,6 +550,7 @@ void Container_ContainerInventory_Class_Provider::EnumerateInstances(Context& co
         	context.Post(queryResult[i]);
     	}
     	context.Post(MI_RESULT_OK);
+		syslog(LOG_WARNING, "Container_ContainerInventory - endime");
     }
 
     catch (std::exception &e)

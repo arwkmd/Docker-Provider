@@ -213,7 +213,6 @@ public:
     static vector<Container_DaemonEvent_Class> QueryAll()
     {
         openlog("Container_DaemonEvent", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
-		syslog(LOG_WARNING, "Container_DaemonEvent - startime");
         vector<Container_DaemonEvent_Class> result;
         int previousTime = GetPreviousTime();
         int currentTime = time(NULL);
@@ -319,7 +318,6 @@ public:
 			syslog(LOG_ERR, "Container_DaemonEvent - QueryAll - Unknown exception");
 		}
         SetPreviousTime(currentTime);
-		syslog(LOG_WARNING, "Container_DaemonEvent - endime");
         closelog();
         return result;
     }
@@ -347,6 +345,7 @@ void Container_DaemonEvent_Class_Provider::EnumerateInstances(Context& context, 
 {
     try
     {
+		syslog(LOG_WARNING, "Container_DaemonEvent - startime");
         string modeStr;
         if(getenv("MODE") != NULL) 
         {
@@ -362,6 +361,7 @@ void Container_DaemonEvent_Class_Provider::EnumerateInstances(Context& context, 
             }
         }
         context.Post(MI_RESULT_OK);
+		syslog(LOG_WARNING, "Container_DaemonEvent - endime");
     }
     catch (std::exception &e)
     {
