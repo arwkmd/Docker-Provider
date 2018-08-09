@@ -98,6 +98,8 @@ module Fluent
         end
     
         def run_periodic
+          @@kperfmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+          $log.info("kubeperf-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintbegin}")
           @mutex.lock
           done = @finished
           until done
@@ -115,6 +117,8 @@ module Fluent
             @mutex.lock
           end
           @mutex.unlock
+          @@kperfmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+          $log.info("kubeperf-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintend}")
         end
       end # Kube_Perf_Input
 end # module

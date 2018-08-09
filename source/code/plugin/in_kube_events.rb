@@ -98,6 +98,8 @@ module Fluent
     end
 
     def run_periodic
+      @@kememoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+      $log.info("kubeevents-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintbegin}") 
       @mutex.lock
       done = @finished
       until done
@@ -115,6 +117,8 @@ module Fluent
         @mutex.lock
       end
       @mutex.unlock
+      @@kememoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+      $log.info("kubeevents-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintend}")
     end
 
     def getEventQueryState

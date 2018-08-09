@@ -201,6 +201,8 @@ module Fluent
     end  
 
     def run_periodic
+      @@kpimemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+      $log.info("kubepodinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintbegin}")
       @mutex.lock
       done = @finished
       until done
@@ -218,6 +220,8 @@ module Fluent
         @mutex.lock
       end
       @mutex.unlock
+      @@kpimemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+      $log.info("kubepodinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintend}")
     end
 
     def getServiceNameFromLabels(namespace, labels, serviceList)

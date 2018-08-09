@@ -111,6 +111,8 @@ module Fluent
       end
   
       def run_periodic
+      @@knmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+      $log.info("kubenodeinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintbegin}")
         @mutex.lock
         done = @finished
         until done
@@ -128,6 +130,8 @@ module Fluent
           @mutex.lock
         end
         @mutex.unlock
+        @@knmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+        $log.info("kubenodeinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintend}")
       end
   
     end # Kube_Node_Input
