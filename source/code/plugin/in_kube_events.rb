@@ -98,14 +98,14 @@ module Fluent
     end
 
     def run_periodic
-      @@kememoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-      $log.info("kubeevents-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintbegin}") 
       @mutex.lock
       done = @finished
       until done
         @condition.wait(@mutex, @run_interval)
         done = @finished
         @mutex.unlock
+        @@kememoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+        $log.info("kubeevents-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintbegin}") 
         if !done
           begin
             $log.info("in_kube_events::run_periodic @ #{Time.now.utc.iso8601}")
@@ -114,11 +114,11 @@ module Fluent
             $log.warn "in_kube_events::run_periodic: enumerate Failed to retrieve kube events: #{errorStr}"
           end
         end
+        @@kememoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+        $log.info("kubeevents-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintend}")
         @mutex.lock
       end
       @mutex.unlock
-      @@kememoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-      $log.info("kubeevents-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kememoryfootprintend}")
     end
 
     def getEventQueryState

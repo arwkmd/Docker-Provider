@@ -201,14 +201,14 @@ module Fluent
     end  
 
     def run_periodic
-      @@kpimemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-      $log.info("kubepodinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintbegin}")
       @mutex.lock
       done = @finished
       until done
         @condition.wait(@mutex, @run_interval)
         done = @finished
         @mutex.unlock
+        @@kpimemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+        $log.info("kubepodinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintbegin}")
         if !done
           begin
             $log.info("in_kube_podinventory::run_periodic @ #{Time.now.utc.iso8601}")
@@ -217,11 +217,11 @@ module Fluent
             $log.warn "in_kube_podinventory::run_periodic: enumerate Failed to retrieve pod inventory: #{errorStr}"
           end
         end
+        @@kpimemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+        $log.info("kubepodinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintend}")
         @mutex.lock
       end
       @mutex.unlock
-      @@kpimemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-      $log.info("kubepodinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kpimemoryfootprintend}")
     end
 
     def getServiceNameFromLabels(namespace, labels, serviceList)

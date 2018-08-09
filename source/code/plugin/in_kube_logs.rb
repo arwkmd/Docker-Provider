@@ -137,24 +137,24 @@ module Fluent
         end
 
         def run_periodic
-            @@klmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-            $log.info("kubelogs-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@klmemoryfootprintbegin}")
             @mutex.lock
             done = @finished
             until done
                 @condition.wait(@mutex, @run_interval)
                 done = @finished
                 @mutex.unlock
+                @@klmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+                $log.info("kubelogs-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@klmemoryfootprintbegin}")
                 if !done
                     $log.debug "calling enumerate for KubeLogs"
                     enumerate
                     $log.debug "done with enumerate for KubeLogs"
                 end
+                @@klmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+                $log.info("kubelogs-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@klmemoryfootprintend}")
                 @mutex.lock
             end
             @mutex.unlock
-            @@klmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-            $log.info("kubelogs-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@klmemoryfootprintend}")
         end
 
         def getLogQueryState

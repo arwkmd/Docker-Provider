@@ -98,14 +98,14 @@ module Fluent
         end
     
         def run_periodic
-          @@kperfmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-          $log.info("kubeperf-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintbegin}")
           @mutex.lock
           done = @finished
           until done
             @condition.wait(@mutex, @run_interval)
             done = @finished
             @mutex.unlock
+            @@kperfmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+            $log.info("kubeperf-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintbegin}")
             if !done
               begin
                 $log.info("in_kube_perf::run_periodic @ #{Time.now.utc.iso8601}")
@@ -114,11 +114,12 @@ module Fluent
                 $log.warn "in_kube_perf::run_periodic: enumerate Failed to retrieve kube perf metrics: #{errorStr}"
               end
             end
+            @@kperfmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+            $log.info("kubeperf-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintend}")
             @mutex.lock
           end
+         
           @mutex.unlock
-          @@kperfmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-          $log.info("kubeperf-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@kperfmemoryfootprintend}")
         end
       end # Kube_Perf_Input
 end # module

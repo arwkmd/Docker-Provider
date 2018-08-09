@@ -74,14 +74,14 @@ module Fluent
         end
     
         def run_periodic
-		  @@ksmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-          $log.info("kubeservices-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@ksmemoryfootprintbegin}")
           @mutex.lock
           done = @finished
           until done
             @condition.wait(@mutex, @run_interval)
             done = @finished
             @mutex.unlock
+            @@ksmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+            $log.info("kubeservices-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@ksmemoryfootprintbegin}")
             if !done
               begin
                 $log.info("in_kube_services::run_periodic @ #{Time.now.utc.iso8601}")
@@ -90,11 +90,11 @@ module Fluent
                 $log.warn "in_kube_services::run_periodic: enumerate Failed to kube services: #{errorStr}"
               end
             end
+            @@ksmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+            $log.info("kubeservices-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@ksmemoryfootprintend}")
             @mutex.lock
           end
           @mutex.unlock
-          @@ksmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-          $log.info("kubeservices-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@ksmemoryfootprintend}")
         end
     
       end # Kube_Services_Input

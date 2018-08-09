@@ -111,14 +111,14 @@ module Fluent
       end
   
       def run_periodic
-      @@knmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
-      $log.info("kubenodeinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintbegin}")
         @mutex.lock
         done = @finished
         until done
           @condition.wait(@mutex, @run_interval)
           done = @finished
           @mutex.unlock
+          @@knmemoryfootprintbegin = `ps -eo vsz,rss,comm | grep omsagent`
+          $log.info("kubenodeinventory-begin-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintbegin}")
           if !done
             begin
               $log.info("in_kube_nodes::run_periodic @ #{Time.now.utc.iso8601}")
@@ -127,11 +127,11 @@ module Fluent
               $log.warn "in_kube_nodes::run_periodic: enumerate Failed to retrieve node inventory: #{errorStr}"
             end
           end
+          @@knmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
+          $log.info("kubenodeinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintend}")
           @mutex.lock
         end
         @mutex.unlock
-        @@knmemoryfootprintend = `ps -eo vsz,rss,comm | grep omsagent`
-        $log.info("kubenodeinventory-end-memoryfootprint @ #{Time.now.utc.iso8601}, #{@@knmemoryfootprintend}")
       end
   
     end # Kube_Node_Input
