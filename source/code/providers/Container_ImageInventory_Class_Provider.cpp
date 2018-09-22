@@ -32,6 +32,7 @@ private:
     ///
     static string SelectTag(cJSON* tags)
     {
+		syslog(LOG_WARNING, "Container_ImageInventory: Begin SelectTag");
         string result = "";
 		try {
 
@@ -66,7 +67,7 @@ private:
 		{
 			syslog(LOG_ERR, "Container_ImageInventory - SelectTag - Unknown exception");
 		}
-
+		syslog(LOG_WARNING, "Container_ImageInventory: End SelectTag");
         return result;
     }
 
@@ -80,6 +81,7 @@ private:
     ///
     static bool SetImageRepositoryImageTag(Container_ImageInventory_Class& instance, string properties)
     {
+		syslog(LOG_WARNING, "Container_ImageInventory: Begin SetImageRepositoryImageTag");
         bool result = true;
 
         switch (properties.size())
@@ -148,7 +150,7 @@ private:
                 break;
             }
         }
-
+		syslog(LOG_WARNING, "Container_ImageInventory: End SetImageRepositoryImageTag");
         return result;
     }
 
@@ -161,6 +163,7 @@ private:
     ///
     static void ObtainContainerState(vector<Container_ImageInventory_Class>& instances, map<string, int>& idTable, cJSON* entry)
     {
+		syslog(LOG_WARNING, "Container_ImageInventory: Begin ObtainContainerState");
 		try {
 			cJSON* state = cJSON_GetObjectItem(entry, "State");
 
@@ -208,6 +211,7 @@ private:
 			{
 				syslog(LOG_WARNING, "Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
 			}
+			syslog(LOG_WARNING, "Container_ImageInventory: End ObtainContainerState");
 		}
 		catch (std::exception &e)
 		{
@@ -227,6 +231,7 @@ private:
     ///
     static void AggregateContainerStatus(vector<Container_ImageInventory_Class>& instances, map<string, int>& idTable)
     {
+		syslog(LOG_WARNING, "Container_ImageInventory: Begin AggregateContainerStatus");
 		try {
 			// Request containers
 			vector<string> request(1, DockerRestHelper::restDockerPs());
@@ -278,6 +283,7 @@ private:
 			{
 				syslog(LOG_WARNING, "API call in AggregateContainerStatus to list containers returned null");
 			}
+			syslog(LOG_WARNING, "Container_ImageInventory: End AggregateContainerStatus");
 		}
 		catch (std::exception &e)
 		{
@@ -298,6 +304,7 @@ public:
     static vector<Container_ImageInventory_Class> QueryAll()
     {
         openlog("Container_ImageInventory", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+		syslog(LOG_WARNING, "Container_ImageInventory: Begin QueryAll");
 
         vector<Container_ImageInventory_Class> result;
         vector<Container_ImageInventory_Class> filteredResult;
@@ -400,6 +407,7 @@ public:
 			{
 				syslog(LOG_WARNING, "API call in QueryAll to list images returned null");
 			}
+			syslog(LOG_WARNING, "Container_ImageInventory: End QueryAll");
 		}
 		catch (std::exception &e)
 		{

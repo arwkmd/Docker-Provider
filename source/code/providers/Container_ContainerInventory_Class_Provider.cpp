@@ -32,6 +32,7 @@ private:
     ///
     static vector<string> SetImageRepositoryImageTag(string& properties)
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin SetImageRepositoryImageTag");
         vector<string> result(3, "");
 
         switch (properties.size())
@@ -79,6 +80,7 @@ private:
                 break;
             }
         }
+		syslog(LOG_WARNING, "Container_ContainerInventory: End SetImageRepositoryImageTag");
         return result;
     }
 
@@ -89,6 +91,7 @@ private:
     ///
     static map<string, vector<string> > GenerateImageNameMap()
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin Generate image name map");
         map<string, vector<string> > result;
 
 		try {
@@ -144,6 +147,7 @@ private:
 			{
 				syslog(LOG_WARNING, "API call in GenerateImageNameMap to list images returned null");
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: End Generate image name map");
 		}
 		catch (std::exception &e)
 		{
@@ -165,6 +169,7 @@ private:
     ///
 	static void ObtainContainerConfig(Container_ContainerInventory_Class& instance, cJSON* entry)
 	{
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin Obtain container config");
 		try {
 			cJSON* config = cJSON_GetObjectItem(entry, "Config");
 
@@ -246,6 +251,7 @@ private:
 			{
 				syslog(LOG_WARNING, "Attempt in ObtainContainerConfig to get container %s config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: Begin Obtain container config");
 		}
 		catch (std::exception &e)
 		{
@@ -265,6 +271,7 @@ private:
     ///
     static void ObtainContainerState(Container_ContainerInventory_Class& instance, cJSON* entry)
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin Obtain container state");
 		try {
 			cJSON* state = cJSON_GetObjectItem(entry, "State");
 
@@ -330,6 +337,7 @@ private:
 			{
 				syslog(LOG_WARNING, "Attempt in ObtainContainerState to get container %s state information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: End Obtain container state");
 		}
 		catch (std::exception &e)
 		{
@@ -349,6 +357,7 @@ private:
     ///
     static void ObtainContainerHostConfig(Container_ContainerInventory_Class& instance, cJSON* entry)
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin Obtain container host config");
 		try {
 			cJSON* hostConfig = cJSON_GetObjectItem(entry, "HostConfig");
 
@@ -374,6 +383,7 @@ private:
 			{
 				syslog(LOG_WARNING, "Attempt in ObtainContainerHostConfig to get container %s host config information returned null", cJSON_GetObjectItem(entry, "Id")->valuestring);
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: End Obtain container host config");
 		}
 		catch (std::exception &e)
 		{
@@ -393,6 +403,7 @@ private:
     ///
     static Container_ContainerInventory_Class InspectContainer(string& id, map<string, vector<string> >& nameMap)
     {
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin inspect container");
         // New inventory entry
         Container_ContainerInventory_Class instance;
 		try {
@@ -448,6 +459,7 @@ private:
 			{
 				syslog(LOG_WARNING, "Attempt in InspectContainer to inspect %s returned null", id.c_str());
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: End inspect container");
 		}
 		catch (std::exception &e)
 		{
@@ -470,6 +482,7 @@ public:
     static vector<Container_ContainerInventory_Class> QueryAll()
     {
         openlog("Container_ContainerInventory", LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+		syslog(LOG_WARNING, "Container_ContainerInventory: Begin QueryAll");
 
         // Get computer name
         string hostname = getDockerHostName();
@@ -507,6 +520,7 @@ public:
 
 				result.push_back(instance);
 			}
+			syslog(LOG_WARNING, "Container_ContainerInventory: End QueryAll");
 		}
 		catch (std::exception &e)
 		{
